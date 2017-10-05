@@ -7,7 +7,15 @@ filename = strcat(folder,'/');
 filename = strcat(filename,fileList(i));
 
 I=imread(filename,'tif');
-[labelarray I] = processImage(I);
+I=imadjust(I);
+imshow(I);
+
+%I=imcomplement(I); %centroid only works for white shapes
+I=im2double(I);
+I = medfilt2(I, [10 10]);
+I = imbinarize(I, .3);
+I = bwareafilt(I,[40 intmax]);
+labelarray = bwlabel(I);
 s=regionprops(labelarray,'Centroid');
 
 for i=2:length(fileList)
